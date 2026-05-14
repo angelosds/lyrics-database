@@ -1,6 +1,6 @@
-import { signIn } from "@/lib/auth";
+import { signIn, auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { AuthError } from "next-auth";
 
 export default async function LoginPage({
   searchParams,
@@ -26,11 +26,18 @@ export default async function LoginPage({
         <form
           action={async (formData) => {
             "use server";
-            await signIn("credentials", {
-              email: formData.get("email"),
-              password: formData.get("password"),
-              redirectTo: "/admin",
-            });
+            try {
+              await signIn("credentials", {
+                email: formData.get("email"),
+                password: formData.get("password"),
+                redirectTo: "/admin",
+              });
+            } catch (error) {
+              if (error instanceof AuthError) {
+                redirect("/login?error=credentials");
+              }
+              throw error;
+            }
           }}
           className="space-y-4"
         >
