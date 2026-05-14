@@ -170,7 +170,7 @@ npm run build
 
 ## Ordem de Implementação
 
-1. [ ] Inicializar projeto Next.js com TypeScript e Tailwind
+1. [x] Inicializar projeto Next.js com TypeScript e Tailwind
 2. [ ] Configurar Neon + Drizzle ORM + schema inicial
 3. [ ] Migrations e seed de dados de exemplo
 4. [ ] Páginas públicas: listagem e visualização de letras
