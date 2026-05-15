@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { setlists, setlistSongs, songs } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { updateSetlist } from "@/lib/actions/setlists";
 import { SetlistEditor } from "@/components/setlist-editor";
@@ -24,6 +24,20 @@ export default async function EditSetlistPage({ params }: Props) {
     .orderBy(setlistSongs.position);
 
   const selectedSongs = currentItems.map((i) => i.song);
+
+  const metricsRows = await db
+    .select({
+      songId: setlistSongs.songId,
+      count: sql<number>`cast(count(*) as int)`,
+      lastDate: sql<string | null>`max(${setlists.eventDate})`,
+    })
+    .from(setlistSongs)
+    .innerJoin(setlists, eq(setlistSongs.setlistId, setlists.id))
+    .groupBy(setlistSongs.songId);
+
+  const metrics = Object.fromEntries(
+    metricsRows.map((r) => [r.songId, { count: r.count, lastDate: r.lastDate }])
+  );
 
   return (
     <div className="container-wide" style={{ padding: "40px var(--pad-x) 56px" }}>
@@ -84,7 +98,7 @@ export default async function EditSetlistPage({ params }: Props) {
         </form>
       </div>
 
-      <SetlistEditor setlistId={id} allSongs={allSongs} initialSelected={selectedSongs} />
+      <SetlistEditor setlistId={id} allSongs={allSongs} initialSelected={selectedSongs} metrics={metrics} />
     </div>
   );
 }

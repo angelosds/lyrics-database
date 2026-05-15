@@ -14,6 +14,7 @@ export const songs = pgTable("songs", {
   slug: text("slug").unique().notNull(),
   lyrics: text("lyrics").notNull(),
   interprete: text("album"),
+  themes: text("themes").array(),
   year: integer("year"),
   key: text("key"),
   bpm: integer("bpm"),

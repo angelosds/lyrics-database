@@ -38,7 +38,7 @@ export default async function SongPage({ params }: Props) {
 
       <h1 className="display" style={{ marginBottom: 14 }}>{song.title}</h1>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 36, color: "var(--fg-muted)", fontSize: 13.5 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: song.themes?.length ? 16 : 36, color: "var(--fg-muted)", fontSize: 13.5 }}>
         {song.interprete && <span>{song.interprete}</span>}
         {song.interprete && song.year && <span style={{ color: "var(--fg-faint)" }}>·</span>}
         {song.year && <span>{song.year}</span>}
@@ -50,6 +50,14 @@ export default async function SongPage({ params }: Props) {
         )}
         {song.bpm && <span className="badge badge-bpm">{song.bpm}</span>}
       </div>
+
+      {song.themes && song.themes.length > 0 && (
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 36 }}>
+          {song.themes.map((t) => (
+            <span key={t} className="badge-theme">{t}</span>
+          ))}
+        </div>
+      )}
 
       <div className="lyrics-block">{song.lyrics}</div>
 

@@ -31,9 +31,16 @@ export function SongForm({ song, action, isNew }: Props) {
         </div>
       </div>
 
-      <div className="field" style={{ maxWidth: 220 }}>
-        <label>BPM</label>
-        <input className="input mono" type="number" name="bpm" defaultValue={song?.bpm ?? ""} placeholder="72" min="40" max="300" />
+      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: 14 }}>
+        <div className="field">
+          <label>BPM</label>
+          <input className="input mono" type="number" name="bpm" defaultValue={song?.bpm ?? ""} placeholder="72" min="40" max="300" />
+        </div>
+        <div className="field">
+          <label>Temas</label>
+          <input className="input" type="text" name="themes" defaultValue={song?.themes?.join(", ") ?? ""} placeholder="Ex.: louvor, adoração, natal" />
+          <div className="help">Separe os temas por vírgula</div>
+        </div>
       </div>
 
       <div className="field">

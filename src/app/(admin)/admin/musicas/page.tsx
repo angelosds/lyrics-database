@@ -43,6 +43,11 @@ export default async function AdminSongsPage() {
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 14.5, fontWeight: 500 }}>{song.title}</div>
               <div className="small muted" style={{ marginTop: 2 }}>{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
+              {song.themes && song.themes.length > 0 && (
+                <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 5 }}>
+                  {song.themes.map((t) => <span key={t} className="badge-theme">{t}</span>)}
+                </div>
+              )}
             </div>
             {song.key && <span className="badge badge-key">{song.key}</span>}
             <div style={{ display: "flex", gap: 0 }}>

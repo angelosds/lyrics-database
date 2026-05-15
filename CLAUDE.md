@@ -24,18 +24,22 @@ Plataforma web para centralizar e compartilhar letras de músicas de uma banda, 
 
 ### Área Pública (sem login)
 - Listagem de todas as músicas da banda
-- Busca por título, trecho de letra ou álbum
+- Busca por título, intérprete, tema ou trecho de letra
 - Visualização completa da letra de cada música
 - URL amigável e compartilhável por música (ex: `/musicas/nome-da-musica`)
-- Metadados por música: título, álbum, ano, tom (key), BPM
+- Metadados por música: título, intérprete, ano, tom (key), BPM
+- Temas exibidos como chips nas listagens e na página da música
 
 ### Área Administrativa (requer login)
 - Login via credenciais (usuário + senha)
 - Gerenciar músicas: criar, editar, arquivar
+  - Campo de temas (tags separadas por vírgula) para categorizar músicas
 - Editor de letras com suporte a formatação básica (versos, refrões, pontes)
 - Gerenciar setlists:
   - Criar setlist para um evento (nome, data, local)
   - Adicionar/remover/reordenar músicas
+  - Filtrar músicas disponíveis por tema ou título ao montar um setlist
+  - Métricas por música no editor de setlist: quantas vezes esteve em setlist e data do último setlist
   - Visualizar e imprimir setlist
   - Compartilhar setlist publicamente via link
 
@@ -296,7 +300,8 @@ songs (
   title       text not null,
   slug        text unique not null,
   lyrics      text not null,
-  album       text,
+  album       text,          -- coluna DB; mapeada para "interprete" no código Drizzle
+  themes      text[],        -- temas/tags da música (ex: ["louvor", "adoração"])
   year        integer,
   key         text,          -- tom musical (ex: "C", "Am")
   bpm         integer,
@@ -305,6 +310,10 @@ songs (
   created_at  timestamp,
   updated_at  timestamp
 )
+
+-- Métricas de uso em setlists (computadas via JOIN, não armazenadas):
+-- • count de setlists: COUNT(*) FROM setlist_songs WHERE song_id = ?
+-- • data do último setlist: MAX(setlists.event_date) JOIN setlist_songs
 
 -- Setlists
 setlists (

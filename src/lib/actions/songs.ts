@@ -7,6 +7,12 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+function parseThemes(raw: FormDataEntryValue | null): string[] | null {
+  if (!raw) return null;
+  const themes = (raw as string).split(",").map((t) => t.trim()).filter(Boolean);
+  return themes.length > 0 ? themes : null;
+}
+
 export async function createSong(formData: FormData) {
   const title = formData.get("title") as string;
   const lyrics = formData.get("lyrics") as string;
@@ -15,6 +21,7 @@ export async function createSong(formData: FormData) {
   const key = formData.get("key") as string | null;
   const bpm = formData.get("bpm") ? Number(formData.get("bpm")) : null;
   const notes = formData.get("notes") as string | null;
+  const themes = parseThemes(formData.get("themes"));
 
   const slug = slugify(title);
 
@@ -23,6 +30,7 @@ export async function createSong(formData: FormData) {
     slug,
     lyrics,
     interprete: interprete || null,
+    themes,
     year: year || null,
     key: key || null,
     bpm: bpm || null,
@@ -42,6 +50,7 @@ export async function updateSong(id: string, formData: FormData) {
   const key = formData.get("key") as string | null;
   const bpm = formData.get("bpm") ? Number(formData.get("bpm")) : null;
   const notes = formData.get("notes") as string | null;
+  const themes = parseThemes(formData.get("themes"));
 
   const [existing] = await db.select().from(songs).where(eq(songs.id, id)).limit(1);
   if (!existing) throw new Error("Música não encontrada");
@@ -55,6 +64,7 @@ export async function updateSong(id: string, formData: FormData) {
       slug,
       lyrics,
       interprete: interprete || null,
+      themes,
       year: year || null,
       key: key || null,
       bpm: bpm || null,
