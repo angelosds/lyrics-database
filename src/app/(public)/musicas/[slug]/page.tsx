@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { songs } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { songs, setlistSongs, setlists } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ShareButton } from "@/components/share-button";
@@ -23,6 +23,15 @@ export default async function SongPage({ params }: Props) {
   const [song] = await db.select().from(songs).where(eq(songs.slug, slug)).limit(1);
 
   if (!song || song.archived) notFound();
+
+  const [metrics] = await db
+    .select({
+      count: sql<number>`cast(count(*) as int)`,
+      lastDate: sql<string | null>`max(${setlists.eventDate})`,
+    })
+    .from(setlistSongs)
+    .innerJoin(setlists, eq(setlistSongs.setlistId, setlists.id))
+    .where(eq(setlistSongs.songId, song.id));
 
   return (
     <article className="container" style={{ padding: "40px var(--pad-x) 56px" }}>
@@ -61,14 +70,26 @@ export default async function SongPage({ params }: Props) {
 
       <div className="lyrics-block">{song.lyrics}</div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, flexWrap: "wrap", gap: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, flexWrap: "wrap", gap: 16 }}>
         <ShareButton />
-        {song.updatedAt && (
-          <span className="small">
-            Atualizado em{" "}
-            {new Date(song.updatedAt).toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" })}
-          </span>
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+          {metrics && metrics.count > 0 ? (
+            <span className="small">
+              {metrics.count}× em setlist
+              {metrics.lastDate && (
+                <> · último em{" "}
+                  {new Date(metrics.lastDate + "T12:00:00").toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" })}
+                </>
+              )}
+            </span>
+          ) : null}
+          {song.updatedAt && (
+            <span className="small">
+              Atualizado em{" "}
+              {new Date(song.updatedAt).toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" })}
+            </span>
+          )}
+        </div>
       </div>
     </article>
   );
