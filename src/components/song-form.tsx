@@ -16,14 +16,10 @@ export function SongForm({ song, action, isNew }: Props) {
         <input className="input" type="text" name="title" required defaultValue={song?.title} placeholder="Ex.: Bondade de Deus" />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 14 }}>
         <div className="field">
           <label>Intérprete</label>
           <input className="input" type="text" name="interprete" defaultValue={song?.interprete ?? ""} placeholder="Ex.: Banda Ibero" />
-        </div>
-        <div className="field">
-          <label>Ano</label>
-          <input className="input" type="number" name="year" defaultValue={song?.year ?? ""} placeholder="2025" min="1900" max="2100" />
         </div>
         <div className="field">
           <label>Tonalidade</label>
@@ -31,16 +27,10 @@ export function SongForm({ song, action, isNew }: Props) {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: 14 }}>
-        <div className="field">
-          <label>BPM</label>
-          <input className="input mono" type="number" name="bpm" defaultValue={song?.bpm ?? ""} placeholder="72" min="40" max="300" />
-        </div>
-        <div className="field">
-          <label>Temas</label>
-          <input className="input" type="text" name="themes" defaultValue={song?.themes?.join(", ") ?? ""} placeholder="Ex.: louvor, adoração, natal" />
-          <div className="help">Separe os temas por vírgula</div>
-        </div>
+      <div className="field">
+        <label>Temas</label>
+        <input className="input" type="text" name="themes" defaultValue={song?.themes?.join(", ") ?? ""} placeholder="Ex.: louvor, adoração, natal" />
+        <div className="help">Separe os temas por vírgula</div>
       </div>
 
       <div className="field">
