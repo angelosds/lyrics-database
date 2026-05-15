@@ -87,10 +87,26 @@ export default async function HomePage({
             </div>
           )}
         </>
+      ) : allSongs.length === 0 ? (
+        <div style={{ padding: "64px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+          <svg width="120" height="64" viewBox="0 0 120 64" fill="none" stroke="currentColor" strokeWidth="1" style={{ color: "var(--fg-faint)" }}>
+            <path d="M4 18h112M4 28h112M4 38h112M4 48h112M4 8h112" strokeOpacity="0.45" />
+            <path d="M60 6v52" stroke="var(--border-strong)" strokeWidth="1.2" />
+            <path d="M55 22c0-4 2-6 5-6s5 2 5 6c0 3-2 5-5 5M55 38c0-3 2-5 5-5s5 2 5 5c0 4-2 6-5 6s-5-2-5-6" stroke="var(--fg-muted)" strokeWidth="1.4" />
+          </svg>
+          <div style={{ fontSize: 16, fontWeight: 500 }}>Nenhuma música ainda</div>
+          <div className="small" style={{ maxWidth: 320, color: "var(--fg-muted)" }}>
+            O repertório está vazio. Acesse a{" "}
+            <Link href="/login" style={{ color: "var(--fg)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+              área admin
+            </Link>{" "}
+            para adicionar as primeiras letras.
+          </div>
+        </div>
       ) : (
         <>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, color: "var(--fg-muted)", fontSize: 12.5 }}>
-            <span>{allSongs.length} músicas</span>
+            <span>{allSongs.length} música{allSongs.length !== 1 ? "s" : ""}</span>
             <span>Título A–Z</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
