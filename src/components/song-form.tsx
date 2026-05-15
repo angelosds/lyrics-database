@@ -34,6 +34,12 @@ export function SongForm({ song, action, isNew }: Props) {
       </div>
 
       <div className="field">
+        <label>Referências bíblicas</label>
+        <input className="input" type="text" name="biblicalRefs" defaultValue={song?.biblicalRefs?.join(", ") ?? ""} placeholder="Ex.: João 3:16, Salmos 23, Rm 8:28" />
+        <div className="help">Separe as referências por vírgula</div>
+      </div>
+
+      <div className="field">
         <label>Letra</label>
         <textarea
           className="textarea mono"

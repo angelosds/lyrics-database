@@ -43,11 +43,12 @@ export default async function AdminSongsPage() {
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 14.5, fontWeight: 500 }}>{song.title}</div>
               <div className="small muted" style={{ marginTop: 2 }}>{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
-              {song.themes && song.themes.length > 0 && (
+              {(song.themes?.length || song.biblicalRefs?.length) ? (
                 <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 5 }}>
-                  {song.themes.map((t) => <span key={t} className="badge-theme">{t}</span>)}
+                  {song.themes?.map((t) => <span key={t} className="badge-theme">{t}</span>)}
+                  {song.biblicalRefs?.map((r) => <span key={r} className="badge-theme" style={{ fontFamily: "var(--font-mono)", fontSize: 11 }}>{r}</span>)}
                 </div>
-              )}
+              ) : null}
             </div>
             {song.key && <span className="badge badge-key">{song.key}</span>}
             <div style={{ display: "flex", gap: 0 }}>
