@@ -5,79 +5,63 @@ import { deleteSetlist } from "@/lib/actions/setlists";
 import Link from "next/link";
 
 export default async function AdminSetlistsPage() {
-  const allSetlists = await db
-    .select()
-    .from(setlists)
-    .orderBy(setlists.eventDate);
-
-  const counts = await db
-    .select({ setlistId: setlistSongs.setlistId, total: count() })
-    .from(setlistSongs)
-    .groupBy(setlistSongs.setlistId);
-
+  const allSetlists = await db.select().from(setlists).orderBy(setlists.eventDate);
+  const counts = await db.select({ setlistId: setlistSongs.setlistId, total: count() }).from(setlistSongs).groupBy(setlistSongs.setlistId);
   const countMap = Object.fromEntries(counts.map((c) => [c.setlistId, c.total]));
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Setlists</h1>
-        <Link
-          href="/admin/setlists/novo"
-          className="bg-zinc-100 hover:bg-white text-zinc-900 font-semibold rounded-lg px-4 py-2 text-sm transition-colors"
-        >
-          + Novo Setlist
+    <div className="container-wide" style={{ padding: "40px var(--pad-x) 56px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
+        <div>
+          <h1 className="title">Setlists</h1>
+          <div className="small muted" style={{ marginTop: 4 }}>{allSetlists.length} setlist{allSetlists.length !== 1 ? "s" : ""}</div>
+        </div>
+        <Link href="/admin/setlists/novo" className="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Novo Setlist
         </Link>
       </div>
 
       {allSetlists.length === 0 ? (
-        <p className="text-zinc-500 text-sm">Nenhum setlist criado.</p>
+        <div className="card" style={{ padding: "24px 18px", color: "var(--fg-faint)", fontSize: 14 }}>
+          Nenhum setlist criado.
+        </div>
       ) : (
-        <div className="space-y-2">
-          {allSetlists.map((setlist) => (
+        <div className="card" style={{ overflow: "hidden" }}>
+          {allSetlists.map((setlist, i) => (
             <div
               key={setlist.id}
-              className="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-lg px-5 py-4"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto",
+                alignItems: "center",
+                gap: 14,
+                padding: "14px 18px",
+                borderBottom: i < allSetlists.length - 1 ? "1px solid var(--border)" : "none",
+              }}
             >
-              <div>
-                <p className="font-medium">{setlist.name}</p>
-                <div className="flex flex-wrap gap-2 mt-0.5 text-sm text-zinc-400">
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 14.5, fontWeight: 500 }}>{setlist.name}</div>
+                <div className="small muted" style={{ marginTop: 2, display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {setlist.eventDate && (
-                    <span>
-                      {new Date(setlist.eventDate + "T12:00:00").toLocaleDateString("pt-BR")}
-                    </span>
+                    <span>{new Date(setlist.eventDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>
                   )}
                   {setlist.venue && <span>{setlist.venue}</span>}
                   <span>{countMap[setlist.id] ?? 0} músicas</span>
+                  {setlist.publicSlug && (
+                    <span style={{ color: "var(--fg-faint)" }}>· público</span>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div style={{ display: "flex", gap: 0, flexShrink: 0 }}>
                 {setlist.publicSlug && (
-                  <Link
-                    href={`/setlists/${setlist.publicSlug}`}
-                    className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
-                  >
-                    Ver público
-                  </Link>
+                  <Link href={`/setlists/${setlist.publicSlug}`} className="btn btn-ghost btn-sm">Ver</Link>
                 )}
-                <Link
-                  href={`/admin/setlists/${setlist.id}/editar`}
-                  className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
-                >
-                  Editar
-                </Link>
-                <form
-                  action={async () => {
-                    "use server";
-                    await deleteSetlist(setlist.id);
-                  }}
-                >
-                  <button
-                    type="submit"
-                    className="text-xs text-zinc-500 hover:text-red-400 transition-colors"
-                    onClick={undefined}
-                  >
-                    Excluir
-                  </button>
+                <Link href={`/admin/setlists/${setlist.id}/editar`} className="btn btn-ghost btn-sm">Editar</Link>
+                <form action={async () => { "use server"; await deleteSetlist(setlist.id); }}>
+                  <button type="submit" className="btn btn-ghost btn-sm" style={{ color: "var(--fg-muted)" }}>Excluir</button>
                 </form>
               </div>
             </div>

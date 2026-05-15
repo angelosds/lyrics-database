@@ -15,146 +15,123 @@ export function SetlistEditor({ setlistId, allSongs, initialSelected }: Props) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const available = allSongs.filter(
-    (s) => !selected.some((sel) => sel.id === s.id)
-  );
+  const available = allSongs.filter((s) => !selected.some((sel) => sel.id === s.id));
 
-  const addSong = (song: Song) => {
-    setSelected((prev) => [...prev, song]);
-    setSaved(false);
-  };
-
-  const removeSong = (id: string) => {
-    setSelected((prev) => prev.filter((s) => s.id !== id));
-    setSaved(false);
-  };
+  const addSong = (song: Song) => { setSelected((p) => [...p, song]); setSaved(false); };
+  const removeSong = (id: string) => { setSelected((p) => p.filter((s) => s.id !== id)); setSaved(false); };
 
   const moveUp = (index: number) => {
     if (index === 0) return;
-    setSelected((prev) => {
-      const next = [...prev];
-      [next[index - 1], next[index]] = [next[index], next[index - 1]];
-      return next;
-    });
+    setSelected((p) => { const n = [...p]; [n[index - 1], n[index]] = [n[index], n[index - 1]]; return n; });
     setSaved(false);
   };
-
   const moveDown = (index: number) => {
-    setSelected((prev) => {
-      if (index === prev.length - 1) return prev;
-      const next = [...prev];
-      [next[index], next[index + 1]] = [next[index + 1], next[index]];
-      return next;
+    setSelected((p) => {
+      if (index === p.length - 1) return p;
+      const n = [...p]; [n[index], n[index + 1]] = [n[index + 1], n[index]]; return n;
     });
     setSaved(false);
   };
 
   const handleSave = async () => {
     setSaving(true);
-    await updateSetlistSongs(
-      setlistId,
-      selected.map((s) => s.id)
-    );
+    await updateSetlistSongs(setlistId, selected.map((s) => s.id));
     setSaving(false);
     setSaved(true);
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-8">
-      {/* Setlist atual */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-sm text-zinc-400 uppercase tracking-wider">
-            Setlist ({selected.length} músicas)
-          </h2>
+    <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 18 }}>
+      {/* Left: current setlist */}
+      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid var(--border)" }}>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 500 }}>Setlist atual</div>
+            <div className="small muted">{selected.length} músicas</div>
+          </div>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="bg-zinc-100 hover:bg-white disabled:opacity-50 text-zinc-900 font-semibold rounded-lg px-4 py-1.5 text-sm transition-colors"
+            className="btn btn-primary btn-sm"
+            style={{ opacity: saving ? 0.6 : 1 }}
           >
-            {saving ? "Salvando..." : saved ? "✓ Salvo" : "Salvar"}
+            {saving ? "Salvando…" : saved ? "✓ Salvo" : "Salvar"}
           </button>
         </div>
 
         {selected.length === 0 ? (
-          <div className="bg-zinc-900 border border-dashed border-zinc-700 rounded-lg p-8 text-center text-sm text-zinc-500">
+          <div style={{ padding: "32px 18px", textAlign: "center", color: "var(--fg-faint)", fontSize: 13.5 }}>
             Adicione músicas da lista ao lado
           </div>
         ) : (
-          <div className="space-y-1">
-            {selected.map((song, index) => (
-              <div
-                key={song.id}
-                className="flex items-center gap-3 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3"
-              >
-                <span className="text-zinc-600 font-mono text-sm w-5 text-right shrink-0">
-                  {index + 1}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{song.title}</p>
-                  {song.key && (
-                    <p className="text-xs text-zinc-500 font-mono">{song.key}</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => moveUp(index)}
-                    disabled={index === 0}
-                    className="p-1 text-zinc-500 hover:text-zinc-200 disabled:opacity-20 transition-colors"
-                    title="Mover para cima"
-                  >
-                    ↑
-                  </button>
-                  <button
-                    onClick={() => moveDown(index)}
-                    disabled={index === selected.length - 1}
-                    className="p-1 text-zinc-500 hover:text-zinc-200 disabled:opacity-20 transition-colors"
-                    title="Mover para baixo"
-                  >
-                    ↓
-                  </button>
-                  <button
-                    onClick={() => removeSong(song.id)}
-                    className="p-1 text-zinc-600 hover:text-red-400 transition-colors ml-1"
-                    title="Remover"
-                  >
-                    ×
-                  </button>
-                </div>
+          selected.map((song, i) => (
+            <div
+              key={song.id}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "32px 1fr auto auto",
+                alignItems: "center",
+                gap: 10,
+                padding: "12px 18px",
+                borderBottom: i < selected.length - 1 ? "1px solid var(--border)" : "none",
+              }}
+            >
+              <span className="mono" style={{ fontSize: 13, color: "var(--fg-faint)" }}>{String(i + 1).padStart(2, "0")}</span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{song.title}</div>
+                {song.key && <div className="small muted mono" style={{ marginTop: 1 }}>{song.key}</div>}
               </div>
-            ))}
-          </div>
+              {song.key && <span className="badge badge-key">{song.key}</span>}
+              <div style={{ display: "flex", gap: 2 }}>
+                <button onClick={() => moveUp(i)} disabled={i === 0} className="icon-btn" title="Subir">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </button>
+                <button onClick={() => moveDown(i)} disabled={i === selected.length - 1} className="icon-btn" title="Descer">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <button onClick={() => removeSong(song.id)} className="icon-btn" title="Remover">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+          ))
         )}
       </div>
 
-      {/* Músicas disponíveis */}
-      <div>
-        <h2 className="font-semibold text-sm text-zinc-400 uppercase tracking-wider mb-3">
-          Adicionar músicas
-        </h2>
-        <div className="space-y-1 max-h-[600px] overflow-y-auto">
-          {available.length === 0 && (
-            <p className="text-sm text-zinc-500 py-4 text-center">
+      {/* Right: available songs */}
+      <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ fontSize: 14, fontWeight: 500 }}>Adicionar música</div>
+        </div>
+        <div style={{ maxHeight: 440, overflowY: "auto" }}>
+          {available.length === 0 ? (
+            <div style={{ padding: "24px 18px", color: "var(--fg-faint)", fontSize: 13.5, textAlign: "center" }}>
               Todas as músicas já estão no setlist.
-            </p>
-          )}
-          {available.map((song) => (
-            <button
-              key={song.id}
-              onClick={() => addSong(song)}
-              className="w-full flex items-center justify-between bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 rounded-lg px-4 py-3 text-left transition-all"
-            >
-              <div>
-                <p className="text-sm font-medium">{song.title}</p>
-                {(song.album || song.key) && (
-                  <p className="text-xs text-zinc-500 mt-0.5">
-                    {[song.album, song.key].filter(Boolean).join(" · ")}
-                  </p>
-                )}
+            </div>
+          ) : (
+            available.map((song, i) => (
+              <div
+                key={song.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto auto",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px 18px",
+                  borderBottom: i < available.length - 1 ? "1px solid var(--border)" : "none",
+                }}
+              >
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{song.title}</div>
+                  <div className="small muted" style={{ marginTop: 1 }}>{[song.album, song.year].filter(Boolean).join(" · ")}</div>
+                </div>
+                {song.key && <span className="badge badge-key">{song.key}</span>}
+                <button onClick={() => addSong(song)} className="icon-btn" title="Adicionar">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
               </div>
-              <span className="text-zinc-500 text-lg ml-2">+</span>
-            </button>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

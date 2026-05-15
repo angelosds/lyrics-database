@@ -5,120 +5,73 @@ import { type Song } from "@/db/schema";
 type Props = {
   song?: Song;
   action: (formData: FormData) => Promise<void>;
+  isNew?: boolean;
 };
 
-export function SongForm({ song, action }: Props) {
+export function SongForm({ song, action, isNew }: Props) {
   return (
-    <form action={action} className="space-y-5 max-w-2xl">
-      <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-          Título *
-        </label>
-        <input
-          type="text"
-          name="title"
-          required
-          defaultValue={song?.title}
-          className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500"
-        />
+    <form action={action} style={{ display: "flex", flexDirection: "column", gap: 18, maxWidth: 720 }}>
+      <div className="field">
+        <label>Título</label>
+        <input className="input" type="text" name="title" required defaultValue={song?.title} placeholder="Ex.: Bondade de Deus" />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-            Álbum
-          </label>
-          <input
-            type="text"
-            name="album"
-            defaultValue={song?.album ?? ""}
-            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500"
-          />
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 14 }}>
+        <div className="field">
+          <label>Álbum</label>
+          <input className="input" type="text" name="album" defaultValue={song?.album ?? ""} placeholder="Ex.: Vivo" />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-            Ano
-          </label>
-          <input
-            type="number"
-            name="year"
-            defaultValue={song?.year ?? ""}
-            min="1900"
-            max="2100"
-            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500"
-          />
+        <div className="field">
+          <label>Ano</label>
+          <input className="input" type="number" name="year" defaultValue={song?.year ?? ""} placeholder="2025" min="1900" max="2100" />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-            Tom
-          </label>
-          <input
-            type="text"
-            name="key"
-            defaultValue={song?.key ?? ""}
-            placeholder="ex: Am, G, C#"
-            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 font-mono"
-          />
+        <div className="field">
+          <label>Tonalidade</label>
+          <input className="input mono" type="text" name="key" defaultValue={song?.key ?? ""} placeholder="G" />
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-          BPM
-        </label>
-        <input
-          type="number"
-          name="bpm"
-          defaultValue={song?.bpm ?? ""}
-          min="40"
-          max="300"
-          className="w-40 bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500"
-        />
+      <div className="field" style={{ maxWidth: 220 }}>
+        <label>BPM</label>
+        <input className="input mono" type="number" name="bpm" defaultValue={song?.bpm ?? ""} placeholder="72" min="40" max="300" />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-          Letra *
-        </label>
+      <div className="field">
+        <label>Letra</label>
         <textarea
+          className="textarea mono"
           name="lyrics"
           required
           defaultValue={song?.lyrics}
           rows={20}
-          className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-zinc-500 font-mono leading-relaxed resize-y"
-          placeholder={"Verso 1\nLinha 2\nLinha 3\n\nRefrão\nLinha 2\nLinha 3"}
+          placeholder={"Verso 1\nLinha 2\n\nRefrão\nLinha 2"}
         />
-        <p className="text-xs text-zinc-500 mt-1">
-          Separe as estrofes com uma linha em branco.
-        </p>
+        <div className="help">
+          Separe as estrofes com uma linha em branco. Linhas que começam com <span className="mono">[</span> são tratadas como rótulos de seção.
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-          Notas internas
-        </label>
+      <div className="field">
+        <label>Notas internas</label>
         <textarea
+          className="textarea"
           name="notes"
           defaultValue={song?.notes ?? ""}
           rows={3}
-          className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-zinc-500 resize-y"
-          placeholder="Observações para uso interno (não aparecem no site)"
+          placeholder="Observações para a equipe (não publicado)"
         />
       </div>
 
-      <div className="flex gap-3 pt-2">
-        <button
-          type="submit"
-          className="bg-zinc-100 hover:bg-white text-zinc-900 font-semibold rounded-lg px-5 py-2.5 text-sm transition-colors"
-        >
-          Salvar
-        </button>
-        <a
-          href="/admin/musicas"
-          className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors py-2.5 px-2"
-        >
-          Cancelar
-        </a>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button type="submit" className="btn btn-primary">Salvar</button>
+          <a href="/admin/musicas" className="btn-link">Cancelar</a>
+        </div>
+        {!isNew && (
+          <span style={{ fontSize: 12, color: "var(--fg-faint)" }}>
+            Slug: <span className="mono">{song?.slug}</span>
+          </span>
+        )}
       </div>
     </form>
   );
