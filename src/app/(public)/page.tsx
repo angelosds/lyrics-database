@@ -146,19 +146,19 @@ export default async function HomePage({
 
 function SongCard({ song }: { song: { id: string; slug: string; title: string; interprete: string | null; year: number | null; key: string | null; themes: string[] | null } }) {
   return (
-    <Link href={`/musicas/${song.slug}`} className="song-card" style={{ gridTemplateRows: "auto auto" }}>
+    <Link href={`/musicas/${song.slug}`} className="song-card">
       <div>
         <div className="song-title">{song.title}</div>
         <div className="song-meta">{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
+        {song.themes && song.themes.length > 0 && (
+          <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 6 }}>
+            {song.themes.map((t) => (
+              <span key={t} className="badge-theme">{t}</span>
+            ))}
+          </div>
+        )}
       </div>
       {song.key && <span className="badge badge-key">{song.key}</span>}
-      {song.themes && song.themes.length > 0 && (
-        <div style={{ gridColumn: "1 / -1", display: "flex", gap: 4, flexWrap: "wrap", marginTop: 4 }}>
-          {song.themes.map((t) => (
-            <span key={t} className="badge-theme">{t}</span>
-          ))}
-        </div>
-      )}
     </Link>
   );
 }
