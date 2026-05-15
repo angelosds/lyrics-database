@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 export async function createSong(formData: FormData) {
   const title = formData.get("title") as string;
   const lyrics = formData.get("lyrics") as string;
-  const album = formData.get("album") as string | null;
+  const interprete = formData.get("interprete") as string | null;
   const year = formData.get("year") ? Number(formData.get("year")) : null;
   const key = formData.get("key") as string | null;
   const bpm = formData.get("bpm") ? Number(formData.get("bpm")) : null;
@@ -22,7 +22,7 @@ export async function createSong(formData: FormData) {
     title,
     slug,
     lyrics,
-    album: album || null,
+    interprete: interprete || null,
     year: year || null,
     key: key || null,
     bpm: bpm || null,
@@ -37,7 +37,7 @@ export async function createSong(formData: FormData) {
 export async function updateSong(id: string, formData: FormData) {
   const title = formData.get("title") as string;
   const lyrics = formData.get("lyrics") as string;
-  const album = formData.get("album") as string | null;
+  const interprete = formData.get("interprete") as string | null;
   const year = formData.get("year") ? Number(formData.get("year")) : null;
   const key = formData.get("key") as string | null;
   const bpm = formData.get("bpm") ? Number(formData.get("bpm")) : null;
@@ -54,7 +54,7 @@ export async function updateSong(id: string, formData: FormData) {
       title,
       slug,
       lyrics,
-      album: album || null,
+      interprete: interprete || null,
       year: year || null,
       key: key || null,
       bpm: bpm || null,

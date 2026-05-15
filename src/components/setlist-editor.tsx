@@ -123,7 +123,7 @@ export function SetlistEditor({ setlistId, allSongs, initialSelected }: Props) {
               >
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 14, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{song.title}</div>
-                  <div className="small muted" style={{ marginTop: 1 }}>{[song.album, song.year].filter(Boolean).join(" · ")}</div>
+                  <div className="small muted" style={{ marginTop: 1 }}>{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
                 </div>
                 {song.key && <span className="badge badge-key">{song.key}</span>}
                 <button onClick={() => addSong(song)} className="icon-btn" title="Adicionar">

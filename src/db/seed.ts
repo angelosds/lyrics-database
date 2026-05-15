@@ -39,7 +39,7 @@ Terceira linha do verso
 Refrão aqui
 Refrão aqui
 Refrão aqui`,
-      album: "Primeiro Álbum",
+      interprete: "Primeiro Álbum",
       year: 2020,
       key: "C",
       bpm: 120,
@@ -65,7 +65,7 @@ Verão, verão
 Tempo de alegria
 Verão, verão
 Toda a banda em harmonia`,
-      album: "Primeiro Álbum",
+      interprete: "Primeiro Álbum",
       year: 2020,
       key: "G",
       bpm: 140,
@@ -91,7 +91,7 @@ Voltar, voltar
 Quero tanto voltar
 Ao seu sorriso
 Ao seu olhar`,
-      album: "Segundo Álbum",
+      interprete: "Segundo Álbum",
       year: 2022,
       key: "Am",
       bpm: 75,

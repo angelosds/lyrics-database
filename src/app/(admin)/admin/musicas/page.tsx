@@ -42,7 +42,7 @@ export default async function AdminSongsPage() {
           >
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 14.5, fontWeight: 500 }}>{song.title}</div>
-              <div className="small muted" style={{ marginTop: 2 }}>{[song.album, song.year].filter(Boolean).join(" · ")}</div>
+              <div className="small muted" style={{ marginTop: 2 }}>{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
             </div>
             {song.key && <span className="badge badge-key">{song.key}</span>}
             <div style={{ display: "flex", gap: 0 }}>
@@ -75,7 +75,7 @@ export default async function AdminSongsPage() {
               >
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 14, fontWeight: 400 }}>{song.title}</div>
-                  <div className="small faint" style={{ marginTop: 2 }}>{[song.album, song.year].filter(Boolean).join(" · ")}</div>
+                  <div className="small faint" style={{ marginTop: 2 }}>{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
                 </div>
                 {song.key && <span className="badge badge-key">{song.key}</span>}
                 <form action={async () => { "use server"; await restoreSong(song.id); }}>

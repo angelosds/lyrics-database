@@ -13,7 +13,7 @@ export const songs = pgTable("songs", {
   title: text("title").notNull(),
   slug: text("slug").unique().notNull(),
   lyrics: text("lyrics").notNull(),
-  album: text("album"),
+  interprete: text("interprete"),
   year: integer("year"),
   key: text("key"),
   bpm: integer("bpm"),

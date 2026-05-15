@@ -23,7 +23,7 @@ export default async function HomePage({
         (s) =>
           s.title.toLowerCase().includes(q.toLowerCase()) ||
           s.lyrics.toLowerCase().includes(q.toLowerCase()) ||
-          (s.album?.toLowerCase().includes(q.toLowerCase()) ?? false)
+          (s.interprete?.toLowerCase().includes(q.toLowerCase()) ?? false)
       )
     : allSongs;
 
@@ -46,7 +46,7 @@ export default async function HomePage({
             type="search"
             name="q"
             defaultValue={q}
-            placeholder="Buscar por título, álbum ou trecho da letra…"
+            placeholder="Buscar por título, intérprete ou trecho da letra…"
           />
         </div>
       </form>
@@ -79,7 +79,7 @@ export default async function HomePage({
                 <Link key={song.id} href={`/musicas/${song.slug}`} className="song-card">
                   <div>
                     <div className="song-title">{song.title}</div>
-                    <div className="song-meta">{[song.album, song.year].filter(Boolean).join(" · ")}</div>
+                    <div className="song-meta">{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
                   </div>
                   {song.key && <span className="badge badge-key">{song.key}</span>}
                 </Link>
@@ -114,7 +114,7 @@ export default async function HomePage({
               <Link key={song.id} href={`/musicas/${song.slug}`} className="song-card">
                 <div>
                   <div className="song-title">{song.title}</div>
-                  <div className="song-meta">{[song.album, song.year].filter(Boolean).join(" · ")}</div>
+                  <div className="song-meta">{[song.interprete, song.year].filter(Boolean).join(" · ")}</div>
                 </div>
                 {song.key && <span className="badge badge-key">{song.key}</span>}
               </Link>

@@ -25,7 +25,7 @@ export default async function EditSongPage({ params }: Props) {
         Voltar para músicas
       </Link>
       <h1 className="title" style={{ marginBottom: 4 }}>Editar música</h1>
-      <p className="small muted" style={{ marginBottom: 32 }}>{song.title} · álbum {song.album}</p>
+      <p className="small muted" style={{ marginBottom: 32 }}>{song.title}{song.interprete ? ` · ${song.interprete}` : ""}</p>
       <SongForm
         song={song}
         action={async (formData) => {

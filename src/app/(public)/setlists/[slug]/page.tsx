@@ -72,7 +72,7 @@ export default async function PublicSetlistPage({ params }: Props) {
                 {song.title}
               </Link>
               <div className="small muted" style={{ marginTop: 4 }}>
-                {[song.album, song.bpm ? `${song.bpm} bpm` : null].filter(Boolean).join(" · ")}
+                {[song.interprete, song.bpm ? `${song.bpm} bpm` : null].filter(Boolean).join(" · ")}
               </div>
               {setlistSong.notes && <div className="note">{setlistSong.notes}</div>}
             </div>

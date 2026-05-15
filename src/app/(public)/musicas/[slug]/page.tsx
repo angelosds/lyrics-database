@@ -39,8 +39,8 @@ export default async function SongPage({ params }: Props) {
       <h1 className="display" style={{ marginBottom: 14 }}>{song.title}</h1>
 
       <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 36, color: "var(--fg-muted)", fontSize: 13.5 }}>
-        {song.album && <span>{song.album}</span>}
-        {song.album && song.year && <span style={{ color: "var(--fg-faint)" }}>·</span>}
+        {song.interprete && <span>{song.interprete}</span>}
+        {song.interprete && song.year && <span style={{ color: "var(--fg-faint)" }}>·</span>}
         {song.year && <span>{song.year}</span>}
         {song.key && (
           <>

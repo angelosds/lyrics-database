@@ -18,8 +18,8 @@ export function SongForm({ song, action, isNew }: Props) {
 
       <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 14 }}>
         <div className="field">
-          <label>Álbum</label>
-          <input className="input" type="text" name="album" defaultValue={song?.album ?? ""} placeholder="Ex.: Vivo" />
+          <label>Intérprete</label>
+          <input className="input" type="text" name="interprete" defaultValue={song?.interprete ?? ""} placeholder="Ex.: Banda Ibero" />
         </div>
         <div className="field">
           <label>Ano</label>
