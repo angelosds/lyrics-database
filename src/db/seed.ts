@@ -1,4 +1,6 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+dotenv.config();
 import { db } from "./index";
 import { songs, users, setlists, setlistSongs } from "./schema";
 import bcrypt from "bcryptjs";
