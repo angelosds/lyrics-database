@@ -34,6 +34,9 @@ export default async function SongPage({ params }: Props) {
     .innerJoin(setlists, eq(setlistSongs.setlistId, setlists.id))
     .where(eq(setlistSongs.songId, song.id));
 
+  const embedUrl = song.youtubeUrl ? youtubeEmbedUrl(song.youtubeUrl) : null;
+  const hasSidebar = !!embedUrl || !!song.themes?.length || !!song.biblicalRefs?.length;
+
   return (
     <article className="container" style={{ padding: "40px var(--pad-x) 56px" }}>
       <Link
@@ -61,40 +64,46 @@ export default async function SongPage({ params }: Props) {
         {song.bpm && <span className="badge badge-bpm">{song.bpm}</span>}
       </div>
 
-      {song.youtubeUrl && youtubeEmbedUrl(song.youtubeUrl) && (
-        <div style={{ marginBottom: 36, borderRadius: 8, overflow: "hidden", aspectRatio: "16/9" }}>
-          <iframe
-            src={youtubeEmbedUrl(song.youtubeUrl)!}
-            title={song.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ width: "100%", height: "100%", border: "none", display: "block" }}
-          />
+      {hasSidebar ? (
+        <div className="song-layout" style={{ marginBottom: 32 }}>
+          <div className="lyrics-block">{song.lyrics}</div>
+          <div className="song-sidebar" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {embedUrl && (
+              <div style={{ borderRadius: 8, overflow: "hidden", aspectRatio: "16/9" }}>
+                <iframe
+                  src={embedUrl}
+                  title={song.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+                />
+              </div>
+            )}
+            {song.themes && song.themes.length > 0 && (
+              <div>
+                <div className="micro" style={{ marginBottom: 8 }}>Temas</div>
+                <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+                  {song.themes.map((t) => <span key={t} className="badge-theme">{t}</span>)}
+                </div>
+              </div>
+            )}
+            {song.biblicalRefs && song.biblicalRefs.length > 0 && (
+              <div>
+                <div className="micro" style={{ marginBottom: 8 }}>Referências bíblicas</div>
+                <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+                  {song.biblicalRefs.map((r) => <span key={r} className="badge-theme" style={{ fontFamily: "var(--font-mono)", fontSize: 11 }}>{r}</span>)}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div style={{ marginBottom: 32 }}>
+          <div className="lyrics-block">{song.lyrics}</div>
         </div>
       )}
 
-      <div className="lyrics-block">{song.lyrics}</div>
-
-      {(song.themes?.length || song.biblicalRefs?.length) ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
-          {song.themes && song.themes.length > 0 && (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {song.themes.map((t) => (
-                <span key={t} className="badge-theme">{t}</span>
-              ))}
-            </div>
-          )}
-          {song.biblicalRefs && song.biblicalRefs.length > 0 && (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {song.biblicalRefs.map((r) => (
-                <span key={r} className="badge-theme" style={{ fontFamily: "var(--font-mono)", fontSize: 11 }}>{r}</span>
-              ))}
-            </div>
-          )}
-        </div>
-      ) : null}
-
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, flexWrap: "wrap", gap: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 0, flexWrap: "wrap", gap: 16 }}>
         <ShareButton />
         <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
           {metrics && metrics.count > 0 ? (
