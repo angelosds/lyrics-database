@@ -47,7 +47,8 @@ export default async function HomePage({
         s.title.toLowerCase().includes(lower) ||
         s.lyrics.toLowerCase().includes(lower) ||
         (s.interprete?.toLowerCase().includes(lower) ?? false) ||
-        (s.themes?.some((t) => t.toLowerCase().includes(lower)) ?? false)
+        (s.themes?.some((t) => t.toLowerCase().includes(lower)) ?? false) ||
+        (s.biblicalRefs?.some((r) => r.toLowerCase().includes(lower)) ?? false)
     );
   }
 
@@ -72,7 +73,7 @@ export default async function HomePage({
             type="search"
             name="q"
             defaultValue={q}
-            placeholder="Buscar por título, intérprete, tema ou trecho da letra…"
+            placeholder="Buscar por título, intérprete, tema, referência bíblica ou trecho da letra…"
           />
           {selectedThemes.map((t) => (
             <input key={t} type="hidden" name="theme" value={t} />
