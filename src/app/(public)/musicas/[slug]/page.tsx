@@ -4,6 +4,7 @@ import { eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ShareButton } from "@/components/share-button";
+import { youtubeEmbedUrl } from "@/lib/utils";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -78,6 +79,18 @@ export default async function SongPage({ params }: Props) {
           )}
         </div>
       ) : null}
+
+      {song.youtubeUrl && youtubeEmbedUrl(song.youtubeUrl) && (
+        <div style={{ marginBottom: 36, borderRadius: 8, overflow: "hidden", aspectRatio: "16/9" }}>
+          <iframe
+            src={youtubeEmbedUrl(song.youtubeUrl)!}
+            title={song.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+          />
+        </div>
+      )}
 
       <div className="lyrics-block">{song.lyrics}</div>
 

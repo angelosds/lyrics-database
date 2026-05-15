@@ -40,6 +40,12 @@ export function SongForm({ song, action, isNew }: Props) {
       </div>
 
       <div className="field">
+        <label>Vídeo no YouTube</label>
+        <input className="input" type="url" name="youtubeUrl" defaultValue={song?.youtubeUrl ?? ""} placeholder="https://www.youtube.com/watch?v=..." />
+        <div className="help">Cole o link do YouTube, youtu.be ou Shorts</div>
+      </div>
+
+      <div className="field">
         <label>Letra</label>
         <textarea
           className="textarea mono"

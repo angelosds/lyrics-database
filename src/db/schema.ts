@@ -16,6 +16,7 @@ export const songs = pgTable("songs", {
   interprete: text("album"),
   themes: text("themes").array(),
   biblicalRefs: text("biblical_refs").array(),
+  youtubeUrl: text("youtube_url"),
   year: integer("year"),
   key: text("key"),
   bpm: integer("bpm"),

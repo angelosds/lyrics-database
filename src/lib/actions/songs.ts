@@ -23,6 +23,7 @@ export async function createSong(formData: FormData) {
   const notes = formData.get("notes") as string | null;
   const themes = parseList(formData.get("themes"));
   const biblicalRefs = parseList(formData.get("biblicalRefs"));
+  const youtubeUrl = (formData.get("youtubeUrl") as string | null) || null;
 
   const slug = slugify(title);
 
@@ -33,6 +34,7 @@ export async function createSong(formData: FormData) {
     interprete: interprete || null,
     themes,
     biblicalRefs,
+    youtubeUrl,
     year: year || null,
     key: key || null,
     bpm: bpm || null,
@@ -54,6 +56,7 @@ export async function updateSong(id: string, formData: FormData) {
   const notes = formData.get("notes") as string | null;
   const themes = parseList(formData.get("themes"));
   const biblicalRefs = parseList(formData.get("biblicalRefs"));
+  const youtubeUrl = (formData.get("youtubeUrl") as string | null) || null;
 
   const [existing] = await db.select().from(songs).where(eq(songs.id, id)).limit(1);
   if (!existing) throw new Error("Música não encontrada");
@@ -69,6 +72,7 @@ export async function updateSong(id: string, formData: FormData) {
       interprete: interprete || null,
       themes,
       biblicalRefs,
+      youtubeUrl,
       year: year || null,
       key: key || null,
       bpm: bpm || null,
